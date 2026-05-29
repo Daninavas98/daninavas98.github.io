@@ -132,7 +132,8 @@
         .intro-video { width: 100%; height: 100%; object-fit: cover; }
 
         .intro-text {
-            position: absolute; bottom: 12%;
+            position: absolute; 
+            bottom: 20%; /* Restaurado al 20% */
             font-family: 'Pinyon Script', cursive;
             font-size: 2.2rem;
             color: #8c7361;
@@ -445,6 +446,57 @@
             opacity: 0.8;
         }
 
+        /* --- SECCIÓN MENÚ CON ANIMACIÓN DE ESCRITURA CORREGIDA --- */
+        .section-menu {
+            background-color: var(--bg-dark-brown);
+            padding: 25px 20px 50px 20px; 
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .menu-title {
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            color: var(--text-gold);
+            margin-bottom: 5px;
+        }
+
+        .menu-subtitle-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .typewriter-text {
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: 1.4rem;
+            font-weight: 400; 
+            color: var(--text-light);
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 0.15em solid transparent; /* Cursor */
+            width: 0;
+            display: inline-block;
+            letter-spacing: 1.5px;
+        }
+
+        /* Se activa automáticamente al hacer scroll */
+        .menu-subtitle-wrapper.animated .typewriter-text {
+            animation: 
+                typing 2s steps(15, end) 0.6s forwards, 
+                blink-caret .8s step-end infinite;
+        }
+
+        /* Animaciones ajustadas exactamente a los 15 caracteres de "Próximamente..." */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 15ch; } 
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--text-gold); }
+        }
+
         /* SECCIONES RESTANTES */
         .section-location { 
             background-image: url('Fondo_Can_Ribas.png');
@@ -465,7 +517,13 @@
         .info-heading { font-size: 1.15rem; font-weight: 600; color: var(--text-gold); margin-top: 20px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .info-text { font-size: 0.95rem; line-height: 1.4; text-align: justify; margin-bottom: 15px; opacity: 0.9; }
 
-        .section-countdown { background-image: url('Textura_de_papel.png'); background-size: cover; padding: 25px 20px 20px 20px; text-align: center; color: var(--text-dark); }
+        .section-countdown { 
+            background-image: url('Textura_de_papel.png'); 
+            background-size: cover; 
+            padding: 10px 20px 20px 20px; /* Restaurado el padding de 10px arriba */
+            text-align: center; 
+            color: var(--text-dark); 
+        }
         .countdown-title-img { max-width: 65%; height: auto; display: block; margin: 0 auto 10px auto; }
         .countdown-grid { display: flex; justify-content: center; align-items: center; gap: 12px; }
         .countdown-block { display: flex; flex-direction: column; align-items: center; }
@@ -477,7 +535,7 @@
         .section-contact { 
             background-color: var(--bg-dark-brown); 
             color: var(--text-light); 
-            padding: 10px 10px; 
+            padding: 40px 10px 20px 10px; /* Restaurado el padding de 40px arriba */
             text-align: center; 
         }
         .contact-title { font-size: clamp(2.5rem, 10vw, 4.2rem); color: #cdc1ab; margin-bottom: -8px; line-height: 0.9; }
@@ -727,6 +785,13 @@
                     </a>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="section-menu">
+        <h2 class="script-font menu-title anim-fade-up">Menú</h2>
+        <div class="menu-subtitle-wrapper anim-fade-up delay-1">
+            <span class="typewriter-text">Próximamente...</span>
         </div>
     </section>
 
