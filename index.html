@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel & Leslye - Boda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime&family=Pinyon+Script&family=Xanh+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-brown: #543A27;
+            --bg-dark-brown: #39312C;
+            --bg-beige: #DFD7CB;
+            --text-light: #FAF1E1;
+            --text-dark: #332E29;
+            --text-gold: #D4BFA5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body.no-scroll {
+            overflow: hidden !important;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 480px;
+            container-type: inline-size; 
+            background-color: var(--bg-brown);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow-x: hidden;
+            position: relative;
+            transition: filter 0.4s ease;
+        }
+
+        /* --- CLASE PARA EL DESENFOQUE --- */
+        .blur-background {
+            filter: blur(6px);
+        }
+
+        .intro-active {
+            height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        .script-font {
+            font-family: 'Pinyon Script', cursive;
+            font-weight: normal;
+        }
+
+        /* --- ANIMACIONES DE TEXTO e IMÁGENES (Scroll) --- */
+        .anim-fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1), transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .anim-slide-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .anim-slide-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .anim-zoom-in {
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .animated.anim-fade-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .animated.anim-slide-left,
+        .animated.anim-slide-right {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animated.anim-zoom-in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.45s; }
+
+        /* --- SECCIÓN INTRO --- */
+        .intro-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #F6F4F1;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-in-out;
+            cursor: pointer;
+        }
+
+        .intro-video { width: 100%; height: 100%; object-fit: cover; }
+
+        .intro-text {
+            position: absolute; bottom: 12%;
+            font-family: 'Pinyon Script', cursive;
+            font-size: 2.2rem;
+            color: #8c7361;
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+        .fade-out { opacity: 0 !important; }
+
+        /* --- SECCIÓN 1: PORTADA --- */
+        .section-cover {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        #cover-video-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.25);
+            z-index: 2;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .cover-design-img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 95vh;
+            display: block;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .intro-complete .cover-design-img {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* SECCIÓN 2: Nuestra Historia */
+        .section-history {
+            background-image: url('Textura_de_papel.png');
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg-beige);
+            color: var(--text-dark);
+            padding: 10.4cqw 5.2cqw;
+        }
+        .history-title { 
+            text-align: center; 
+            font-size: 10cqw; 
+            margin-bottom: 8.33cqw; 
+            color: var(--text-dark); 
+        }
+        .history-row { display: flex; align-items: center; gap: 3.125cqw; margin-bottom: 6.25cqw; }
+        .history-row.reverse { flex-direction: row-reverse; }
+        
+        .history-row.row-align-top { align-items: flex-start; }
+        
+        .history-col-text { flex: 1.2; }
+        .history-col-photo { flex: 1.15; display: flex; align-items: center; justify-content: center; }
+        
+        .history-row.row-large-photo .history-col-photo { flex: 1.6; }
+        
+        .history-text { 
+            font-size: 3.16cqw; 
+            line-height: 1.35; 
+            text-align: justify; 
+        }
+        .history-text.first::first-letter { 
+            font-size: 7.33cqw; 
+            font-family: 'Pinyon Script'; 
+            float: left; 
+            margin-right: 1.04cqw; 
+            line-height: 0.7; 
+            margin-top: 1.04cqw;
+        }
+        
+        .history-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .general-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* --- SECCIÓN 3: IMAGEN DEL VERSÍCULO --- */
+        .section-verse {
+            width: 100%;
+            display: block;
+            margin: 0;
+            padding: 0;
+            line-height: 0;
+            background-color: var(--bg-beige);
+        }
+        .section-verse img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- SECCIÓN TIMELINE --- */
+        .section-timeline { 
+            background-color: var(--bg-dark-brown); 
+            padding: clamp(20px, 5cqw, 30px) 20px 0 20px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(8px, 3cqw, 15px); 
+        }
+        
+        .timeline-left { flex: 0 0 35%; }
+        .timeline-left img { width: 100%; height: auto; display: block; }
+        .timeline-right { flex: 1; display: flex; flex-direction: column; gap: clamp(10px, 3cqw, 15px); }
+        
+        .timeline-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: baseline; 
+            font-size: clamp(0.65rem, 3.2cqw, 1.2rem); 
+            color: var(--text-gold); 
+            border-bottom: 1px solid rgba(212, 191, 165, 0.15); 
+            padding-bottom: clamp(4px, 1.5cqw, 8px); 
+            margin-bottom: clamp(10px, 3cqw, 15px); 
+        }
+        .timeline-item span:first-child { font-weight: 600; color: var(--text-gold); }
+
+        /* --- SEPARADOR SUPERPUESTO --- */
+        .separador-superpuesto {
+            width: 100%; 
+            background-image: url('separador.png'); 
+            background-size: cover; 
+            background-position: center;
+            padding: 30px 18px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+        .separador-grid { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 45px; 
+            width: 100%; 
+        }
+        .separador-grid img { 
+            width: 27%; 
+            height: auto; 
+            object-fit: cover; 
+            border-radius: 4px; 
+            display: block; 
+        }
+
+        /* --- SECCIÓN RSVP --- */
+        .section-rsvp {
+            background-image: url('Textura_de_papel_2.png');
+            background-size: cover;
+            background-position: center;
+            padding: 5.2cqw 5.2cqw 6.25cqw 5.2cqw;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .rsvp-title {
+            text-align: center;
+            font-size: 9cqw;
+            margin-bottom: 1.66cqw;
+            color: var(--text-dark);
+        }
+
+        .rsvp-text-block {
+            font-size: 3.5cqw;
+            line-height: 1.4;
+            text-align: justify;
+            margin-bottom: 1.25cqw;
+        }
+
+        .rsvp-flex-paragraph {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.25cqw;
+        }
+
+        .rsvp-paragraph-content {
+            flex: 1;
+            font-size: 3.5cqw;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        .rsvp-drop-cap {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 11.3cqw;
+            margin-right: 2.5cqw;
+            line-height: 0.7;
+            margin-top: 1.04cqw;
+            margin-left: -0.6cqw;
+            flex-shrink: 0;
+        }
+
+        .rsvp-action-center {
+            text-align: center;
+            margin: 1.04cqw 0 1.04cqw 0;
+        }
+
+        .rsvp-action-text {
+            display: inline-block;
+            background: radial-gradient(ellipse at center, rgba(184, 161, 137, 0.25) 0%, rgba(184, 161, 137, 0) 70%);
+            padding: 1.04cqw; 
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .click-image {
+            max-width: 100%; 
+            height: 15cqw; 
+            display: block; 
+            margin: 0 auto; 
+        }
+
+        .rsvp-grid {
+            display: flex;
+            gap: 3.1cqw;
+            align-items: flex-start;
+        }
+
+        .rsvp-placeholder {
+            flex: 0 0 42%;
+            width: 42%;
+            height: auto;
+            aspect-ratio: 3/4;
+            border-radius: 4px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .rsvp-grid-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rsvp-gift-title {
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.3;
+            font-size: 3.5cqw;
+            margin-bottom: 1.25cqw;
+        }
+
+        .rsvp-grid-text {
+            font-size: 3.16cqw;
+            line-height: 1.3;
+            text-align: justify;
+            margin-bottom: 1.25cqw;
+        }
+
+        .rsvp-account-link-container {
+            margin-top: auto; 
+            text-align: center; 
+            padding-top: 10px;
+        }
+
+        .rsvp-account-link {
+            font-size: 2.33cqw;
+            color: var(--text-dark);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 1.04cqw;
+        }
+        
+        .rsvp-account-icon {
+            width: 3.75cqw;
+            height: auto;
+            opacity: 0.8;
+        }
+
+        /* SECCIONES RESTANTES */
+        .section-location { 
+            background-image: url('Fondo_Can_Ribas.png');
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg-brown); 
+            color: var(--text-light); 
+            padding: 60px 25px; 
+            text-align: center; 
+        }
+        .location-title { font-size: clamp(2.5rem, 10vw, 4.5rem); color: var(--text-light); margin-bottom: 15px; }
+        .location-address { font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px; }
+        
+        .location-link { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; color: var(--text-gold); margin-bottom: 40px; text-decoration: underline; display: block; }
+        
+        .location-priority { font-size: 1.6rem; line-height: 1.3; margin: 30px 0; }
+        .info-box { text-align: left; margin-top: 35px; }
+        .info-heading { font-size: 1.15rem; font-weight: 600; color: var(--text-gold); margin-top: 20px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .info-text { font-size: 0.95rem; line-height: 1.4; text-align: justify; margin-bottom: 15px; opacity: 0.9; }
+
+        .section-countdown { background-image: url('Textura_de_papel.png'); background-size: cover; padding: 25px 20px 20px 20px; text-align: center; color: var(--text-dark); }
+        .countdown-title-img { max-width: 65%; height: auto; display: block; margin: 0 auto 10px auto; }
+        .countdown-grid { display: flex; justify-content: center; align-items: center; gap: 12px; }
+        .countdown-block { display: flex; flex-direction: column; align-items: center; }
+        .countdown-num { font-size: 2.4rem; font-family: 'Xanh Mono', monospace; min-width: 50px; }
+        .countdown-label { font-size: 0.75rem; letter-spacing: 1px; color: #555; margin-top: 2px; }
+        .countdown-divider { font-size: 2rem; padding-bottom: 20px; }
+
+        /* --- CONTACTO --- */
+        .section-contact { 
+            background-color: var(--bg-dark-brown); 
+            color: var(--text-light); 
+            padding: 10px 10px; 
+            text-align: center; 
+        }
+        .contact-title { font-size: clamp(2.5rem, 10vw, 4.2rem); color: #cdc1ab; margin-bottom: -8px; line-height: 0.9; }
+        .contact-subtitle { font-size: 1.1rem; color: #cdc1ab; margin-bottom: 0px; }
+        
+        .contact-image-container {
+            width: 80%;
+            max-width: 320px;
+            aspect-ratio: 16/9;
+            margin: 8px auto 12px auto;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        .contact-phones-container {
+            display: flex;
+            flex-direction: row; 
+            gap: 40px; 
+            justify-content: center; 
+            align-items: center; 
+            margin-top: 15px; 
+        }
+        .contact-item {
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+        }
+        .contact-item a { 
+            color: inherit; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding-bottom: 2px;
+        }
+
+        .section-final-video {
+            width: 100%;
+            display: block;
+            line-height: 0;
+            background-color: var(--bg-dark-brown);
+        }
+        .final-video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 65px; 
+            height: 65px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        .audio-control.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .audio-control img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        @media (min-width: 481px) {
+            .audio-control {
+                right: calc(50% - 220px); 
+            }
+        }
+
+        /* --- MODAL DE CUENTA --- */
+        .account-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 10000;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .account-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        .account-modal-content {
+            position: relative;
+            width: 85%;
+            max-width: 480px;
+            margin: auto;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .account-modal.show .account-modal-content {
+            transform: scale(1);
+        }
+        .account-modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            box-shadow: none;
+            display: block;
+        }
+    </style>
+    <script async src="https://tally.so/widgets/embed.js"></script>
+</head>
+<body class="no-scroll">
+
+<div class="mobile-container intro-active" id="main-container">
+
+    <audio id="bg-music" loop autoplay>
+        <source src="cancion.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="audio-control" class="audio-control">
+        <img id="audio-icon-img" src="Musica_on.png" alt="Control de música">
+    </div>
+
+    <div id="account-modal" class="account-modal">
+        <div class="account-modal-content">
+            <img src="cuenta.png" alt="Información de cuenta">
+        </div>
+    </div>
+
+    <div id="intro-overlay" class="intro-overlay">
+        <video id="intro-video" class="intro-video" playsinline>
+            <source src="Vídeo_Intro_Sello.mp4" type="video/mp4">
+        </video>
+        <div class="intro-text" id="intro-hint">Toca para abrir</div>
+    </div>
+
+    <section class="section-cover">
+        <video id="cover-video-background" autoplay loop muted playsinline>
+            <source src="Grabación_de_manos.mp4" type="video/mp4">
+        </video>
+        <div class="cover-overlay"></div>
+        
+        <div class="cover-content">
+            <img class="cover-design-img" src="Letras_inicio.png" alt="Daniel & Leslye are getting married">
+        </div>
+    </section>
+
+    <section class="section-history">
+        <h2 class="script-font history-title anim-fade-up">Nuestra Historia</h2>
+        
+        <div class="history-row row-large-photo">
+            <div class="history-col-text">
+                <p class="history-text first anim-slide-left">Nos conocimos siendo adolescentes, pero fue la complicidad entre un piano, una voz y canciones compartidas lo que creó una conexión entre nosotros. Así comenzaron siete años de una amistad intencional; un largo proceso, donde elegimos ser pacientes y esperar el momento correcto.</p>
+            </div>
+            <div class="history-col-photo">
+                <img src="FOTO_1.png" alt="Historia Foto 1" class="history-img anim-zoom-in" />
+            </div>
+        </div>
+
+        <div class="history-row reverse row-align-top">
+            <div class="history-col-text">
+                <p class="history-text anim-slide-right" style="margin-top: 5.2cqw;">Con el tiempo, Dios convirtió nuestra confianza en el mayor pilar frente a la distancia. Desde los meses de Leslye en Alemania y un confinamiento en Barcelona, hasta el año universitario de Dani en Mallorca, las llamadas y mensajes sostuvieron nuestra amistad.</p>
+            </div>
+            <div class="history-col-photo" style="flex: 1.25; margin-top: 6cqw;">
+                <img src="FOTO_2.png" alt="Historia Foto 2" class="history-img anim-zoom-in" />
+            </div>
+        </div>
+
+        <div class="history-row row-large-photo">
+            <div class="history-col-text">
+                <p class="history-text anim-slide-left">Fue en esa isla, durante una visita a Dani, donde nuestra espera floreció en noviazgo. Y posteriormente tras 2 años de noviazgo, nos prometimos. Tras casi tres años de novios, con el corazón lleno de ilusión y listos para dar el siguiente paso, nos casamos.<br><br>No podemos esperar para celebrar y comenzar este emocionante capítulo como <span class="script-font" style="font-size: 4.66cqw;">Husband and Wife.</span></p>
+            </div>
+            <div class="history-col-photo">
+                <img src="FOTO_3.png" alt="Historia Foto 3" class="history-img anim-zoom-in" />
+            </div>
+        </div>
+    </section>
+
+    <section class="section-verse anim-fade-up">
+        <img src="Foto_versículo.png" alt="Versículo" />
+    </section>
+
+    <section class="section-timeline">
+        <div class="timeline-left anim-zoom-in">
+            <img src="TITULO_TIMELINE.png" alt="Timeline Título" />
+        </div>
+        <div class="timeline-right">
+            <div class="timeline-item anim-fade-up"><span>17:30</span><span>Welcome Drinks</span></div>
+            <div class="timeline-item anim-fade-up delay-1"><span>18:00</span><span>Ceremonia</span></div>
+            <div class="timeline-item anim-fade-up delay-2"><span>19:00</span><span>Aperitivo y a la brasa</span></div>
+            <div class="timeline-item anim-fade-up delay-3"><span>21:00</span><span>Entrantes, Principal y pastel</span></div>
+            <div class="timeline-item anim-fade-up delay-3"><span>23:00</span><span>Barra libre y Fiesta</span></div>
+        </div>
+    </section>
+
+    <div class="separador-superpuesto">
+        <div class="separador-grid">
+            <img src="1_1.png" alt="Imagen 1.1" class="anim-zoom-in">
+            <img src="1_2.png" alt="Imagen 1.2" class="anim-zoom-in delay-1">
+            <img src="1_3.png" alt="Imagen 1.3" class="anim-zoom-in delay-2">
+        </div>
+    </div>
+
+    <section class="section-rsvp">
+        <h2 class="script-font rsvp-title anim-fade-up">¿Nos acompañas?</h2>
+        
+        <div class="rsvp-flex-paragraph anim-fade-up">
+            <div class="rsvp-drop-cap">P</div>
+            <div class="rsvp-paragraph-content">
+                ara ayudarnos a organizar este día tan especial, te pedimos que confirmes tu asistencia. Al ser una celebración íntima, las invitaciones son personales.
+            </div>
+        </div>
+        
+        <p class="rsvp-text-block anim-fade-up">
+            Ayúdanos a organizarlo todo completando el formulario con tu confirmación y otros detalles antes del <strong>1 de agosto.</strong>
+        </p>
+
+        <div class="rsvp-action-center anim-fade-up delay-1">
+            <div class="rsvp-action-text" id="btn-abrir-tally">
+                <img src="Click.png" alt="Rellenar formulario" class="click-image">
+            </div>
+        </div>
+
+        <div class="rsvp-grid anim-fade-up delay-2">
+            
+            <img src="Click_2.png" alt="Daniel y Leslye" class="rsvp-placeholder">
+            
+            <div class="rsvp-grid-content">
+                <p class="rsvp-gift-title"><strong>Tu compañía es el regalo más<br>valioso que podemos recibir.</strong></p>
+                
+                <p class="rsvp-grid-text">No obstante, si deseas tener un detalle con nosotros, estamos dando forma a nuestro hogar; un lienzo en blanco que empezamos a llenar de sueños desde cero.</p>
+                
+                <p class="rsvp-grid-text" style="margin-bottom: 20px;">Gracias por formar parte de nuestra historia.</p>
+                
+                <div class="rsvp-account-link-container">
+                    <a href="#" class="rsvp-account-link">
+                        <img src="Boton_cuenta.png" alt="Ver información de cuenta" style="max-width: 220px; width: 100%; height: auto;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-location">
+        <h2 class="script-font location-title anim-fade-up">Can Ribas</h2>
+        <div style="aspect-ratio: 16/9; margin: 20px 0;"><img src="Can_Ribas.png" alt="Ubicación Imagen" class="general-img" /></div>
+        
+        <p class="location-address anim-fade-up">Camí de Can Ribas, s/n, 08415<br>Bigues i Riells, Barcelona</p>
+        
+        <a href="https://maps.app.goo.gl/cvjn9LxpDfw4Snm48" target="_blank" class="location-link anim-fade-up delay-1">VER UBICACIÓN</a>
+        
+        <p class="script-font location-priority anim-fade-up delay-2">Nuestra mayor prioridad es que disfrutéis tanto como nosotros</p>
+        
+        <div class="info-box">
+            <p class="info-heading anim-fade-up">Reception Venue</p>
+            <p class="info-text anim-fade-up">La ceremonia y el aperitivo serán al aire libre para disfrutar del atardecer en el jardín. Después, pasaremos al salón interior para disfrutar del banquete.</p>
+            
+            <p class="info-heading anim-fade-up">Dress Code</p>
+            <p class="info-text anim-fade-up">Ven con tu estilo favorito, recomendamos tejidos frescos y colores alegres ya que armonizan precioso con el entorno. En esta ocasión el blanco y derivados están reservados para la novia.</p>
+            
+            <p class="info-heading anim-fade-up">Parking y Accesos</p>
+            <p class="info-text anim-fade-up">La finca dispone de parking gratuito y vigilado dentro del mismo recinto para todos los asistentes. Si vienes sin coche, avísanos y te ayudaremos.</p>
+        </div>
+    </section>
+
+    <section class="section-countdown">
+        <img src="Nos_vemos_en.png" alt="Nos vemos en" class="countdown-title-img anim-fade-up">
+        <div class="countdown-grid anim-fade-up delay-1">
+            <div class="countdown-block"><span class="countdown-num" id="days">00</span><span class="countdown-label">DÍAS</span></div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-block"><span class="countdown-num" id="hours">00</span><span class="countdown-label">HORAS</span></div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-block"><span class="countdown-num" id="minutes">00</span><span class="countdown-label">MINUTOS</span></div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-block"><span class="countdown-num" id="seconds">00</span><span class="countdown-label">SEGUNDOS</span></div>
+        </div>
+    </section>
+
+    <section class="section-contact">
+        <h2 class="script-font contact-title anim-fade-up">Contáctanos</h2>
+        <p class="contact-subtitle anim-fade-up delay-1">Si tienes alguna duda</p>
+        
+        <div class="contact-image-container anim-fade-up">
+            <video class="general-img" autoplay loop muted playsinline>
+                <source src="Video_caballito.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="contact-phones-container anim-fade-up delay-2">
+            <p class="contact-item">Dani: <a href="tel:+34691797447">691 79 74 47</a></p>
+            <p class="contact-item">Les: <a href="tel:+34681674114">681 67 41 14</a></p>
+        </div>
+    </section>
+
+    <section class="section-final-video">
+        <video class="final-video" autoplay loop muted playsinline>
+            <source src="Video_final.mp4" type="video/mp4">
+        </video>
+    </section>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const introOverlay = document.getElementById('intro-overlay');
+        const introVideo = document.getElementById('intro-video');
+        const introHint = document.getElementById('intro-hint');
+        const mainContainer = document.getElementById('main-container');
+        
+        const bgMusic = document.getElementById('bg-music');
+        const audioControl = document.getElementById('audio-control');
+        const audioIconImg = document.getElementById('audio-icon-img');
+        let isPlaying = false;
+        let hasStarted = false;
+
+        bgMusic.play().then(() => {
+            isPlaying = true;
+        }).catch(() => {
+            console.log("Autoplay bloqueado por el navegador");
+        });
+
+        introVideo.load();
+
+        introOverlay.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                isPlaying = true;
+            }
+
+            if (!hasStarted) {
+                hasStarted = true;
+                if (introHint) introHint.style.display = 'none';
+                const playPromise = introVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Error al reproducir el vídeo:", error);
+                        endIntro(); 
+                    });
+                }
+            }
+        });
+
+        introVideo.addEventListener('ended', () => {
+            endIntro();
+        });
+
+        function endIntro() {
+            introOverlay.classList.add('fade-out'); 
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+                mainContainer.classList.remove('intro-active');
+                document.body.classList.remove('no-scroll');
+                mainContainer.classList.add('intro-complete');
+                
+                audioControl.classList.add('visible');
+                audioIconImg.src = isPlaying ? "Musica_on.png" : "Musica_off.png";
+            }, 800);
+        }
+
+        audioControl.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioIconImg.src = "Musica_off.png";
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                audioIconImg.src = "Musica_on.png";
+                isPlaying = true;
+            }
+        });
+
+        const btnAbrirTally = document.getElementById('btn-abrir-tally');
+        if (btnAbrirTally) {
+            btnAbrirTally.addEventListener('click', () => {
+                if (typeof Tally !== 'undefined') {
+                    Tally.openPopup('68pa5k', {
+                        layout: 'modal', 
+                        alignItems: 'center', 
+                        width: 450, 
+                        overlay: 'rgba(0, 0, 0, 0.4)',
+                        onOpen: () => {
+                            document.body.classList.add('no-scroll');
+                            mainContainer.classList.add('blur-background');
+                        },
+                        onClose: () => {
+                            document.body.classList.remove('no-scroll');
+                            mainContainer.classList.remove('blur-background');
+                        }
+                    });
+                } else {
+                    console.error("El script de Tally no ha cargado aún.");
+                }
+            });
+        }
+
+        const accountLink = document.querySelector('.rsvp-account-link');
+        const accountModal = document.getElementById('account-modal');
+
+        if(accountLink && accountModal) {
+            accountLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                accountModal.style.display = 'flex';
+                document.body.classList.add('no-scroll'); 
+                
+                setTimeout(() => {
+                    accountModal.classList.add('show');
+                }, 10);
+            });
+
+            accountModal.addEventListener('click', (e) => {
+                if(e.target === accountModal) {
+                    accountModal.classList.remove('show');
+                    document.body.classList.remove('no-scroll'); 
+                    
+                    setTimeout(() => {
+                        accountModal.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        const targetDate = new Date('August 26, 2026 18:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const animatedElements = document.querySelectorAll('.anim-fade-up, .anim-slide-left, .anim-slide-right, .anim-zoom-in');
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
+
+</body>
+</html>
